@@ -738,7 +738,8 @@ start_watcher() {
         # -m: sürekli izleme modu
         # -r: alt klasörleri de izle
         # -e: izlenecek olaylar
-        inotifywait -m -r -e create,delete,moved_to,moved_from --format '%w%f %e' "$SITES_DIR" 2>/dev/null &
+        log_info "inotifywait başlatılıyor: $SITES_DIR"
+        inotifywait -m -r -e create,delete,moved_to,moved_from,modify --format '%w%f %e' "$SITES_DIR" &
         SITES_PID=$!
         
         # Store PID for cleanup

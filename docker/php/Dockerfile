@@ -10,10 +10,19 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     libzip-dev \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# PHP extensionları kur
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+# GD extensionunu FreeType ve JPEG desteği ile kur
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+
+# Composer kur
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# PHP konfigürasyonunu kopyala
+COPY php.ini /usr/local/etc/php/conf.d/99-custom.ini
 
 # Çalışma dizini
 WORKDIR /var/www/html

@@ -1,0 +1,19 @@
+services:
+  all-in-one:
+    build:
+      context: .
+      dockerfile: docker/all-in-one/Dockerfile
+    container_name: laravel_stack
+    ports:
+      - "80:80"
+      - "3306:3306"
+      - "6379:6379"
+    volumes:
+      - ${PROJECTS_PATH:-./projects}:/var/www/html:rw
+      - mysql_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-root}
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
